@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Control Diario</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 14px;
+    background: #e9edf2;
+    font-family: Arial, sans-serif;
+}
+
+.ficha {
+    width: 100%;
+    max-width: 410px;
+    margin: 0 auto;
+    background: white;
+    border: 2px solid #222;
+    border-radius: 14px;
+    padding: 16px;
+}
+
+h1 {
+    margin: 0 0 18px 0;
+    text-align: center;
+    font-size: 26px;
+    color: #111;
+}
+
+.campo {
+    margin-bottom: 13px;
+}
+
+label {
+    display: block;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input,
+textarea {
+    display: block;
+    width: 100%;
+    border: 2px solid #555;
+    border-radius: 8px;
+    padding: 11px;
+    font-size: 17px;
+    background: white;
+}
+
+textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+button {
+    display: block;
+    width: 100%;
+    margin-top: 18px;
+    padding: 15px;
+    border: 0;
+    border-radius: 10px;
+    background: #d71920;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.mensaje {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="ficha">
+
+<h1>CONTROL DIARIO</h1>
+
+<div class="campo">
+<label>DÍA</label>
+<input id="dia" type="date">
+</div>
+
+<div class="campo">
+<label>BUS</label>
+<input id="bus" type="text">
+</div>
+
+<div class="campo">
+<label>H. ENTRADA</label>
+<input id="entrada" type="time">
+</div>
+
+<div class="campo">
+<label>H. SALIDA</label>
+<input id="salida" type="time">
+</div>
+
+<div class="campo">
+<label>TOTAL HORAS</label>
+<input id="total" type="text">
+</div>
+
+<div class="campo">
+<label>KM INICIO</label>
+<input id="kminicio" type="number">
+</div>
+
+<div class="campo">
+<label>KM FINAL</label>
+<input id="kmfinal" type="number">
+</div>
+<div class="campo">
+<label>BUS 2</label>
+<input id="bus2" type="text">
+</div>
+
+<div class="campo">
+<label>H. ENTRADA 2</label>
+<input id="entrada2" type="time">
+</div>
+
+<div class="campo">
+<label>H. SALIDA 2</label>
+<input id="salida2" type="time">
+</div>
+
+<div class="campo">
+<label>KM INICIO 2</label>
+<input id="kminicio2" type="number">
+</div>
+
+<div class="campo">
+<label>KM FINAL 2</label>
+<input id="kmfinal2" type="number">
+</div>
+<div class="campo">
+<label>DIETAS</label>
+<input id="dietas" type="text">
+</div>
+
+<div class="campo">
+<label>NOTAS</label>
+<textarea id="notas"></textarea>
+</div>
+
+<button onclick="guardar()">GUARDAR</button>
+<button onclick="nuevoDia()">NUEVO DÍA</button>
+<button onclick="borrarDia()">BORRAR DÍA</button>
+<button onclick="mostrarDias()">DÍAS GUARDADOS</button>
+<button onclick="copiaSeguridad()">COPIA DE SEGURIDAD</button>
+<div id="listaDias"></div>
+<div id="mensaje" class="mensaje"></div>
+
+</div>
+
+<script>
+
+function guardar() {
+
+    const datos = {
+    dia: document.getElementById("dia").value,
+    bus: document.getElementById("bus").value,
+    entrada: document.getElementById("entrada").value,
+    salida: document.getElementById("salida").value,
+    total: document.getElementById("total").value,
+    kminicio: document.getElementById("kminicio").value,
+    kmfinal: document.getElementById("kmfinal").value,
+
+    bus2: document.getElementById("bus2").value,
+    entrada2: document.getElementById("entrada2").value,
+    salida2: document.getElementById("salida2").value,
+    kminicio2: document.getElementById("kminicio2").value,
+    kmfinal2: document.getElementById("kmfinal2").value,
+
+    dietas: document.getElementById("dietas").value,
+    notas: document.getElementById("notas").value
+};
+
+    localStorage.setItem("controlDiario_" + datos.dia, JSON.stringify(datos));("controlDiario", JSON.stringify(datos));
+
+    document.getElementById("mensaje").innerText =
+        "REGISTRO GUARDADO";
+}
+function cargarDia() {
+
+    const dia = document.getElementById("dia").value;
+    const guardado = localStorage.getItem("controlDiario_" + dia);
+
+    if (guardado) {
+
+        const datos = JSON.parse(guardado);
+
+        document.getElementById("bus").value = datos.bus || "";
+        document.getElementById("entrada").value = datos.entrada || "";
+        document.getElementById("salida").value = datos.salida || "";
+        document.getElementById("total").value = datos.total || "";
+        document.getElementById("kminicio").value = datos.kminicio || "";
+        document.getElementById("kmfinal").value = datos.kmfinal || "";
+        document.getElementById("bus2").value = datos.bus2 || "";
+document.getElementById("entrada2").value = datos.entrada2 || "";
+document.getElementById("salida2").value = datos.salida2 || "";
+document.getElementById("kminicio2").value = datos.kminicio2 || "";
+document.getElementById("kmfinal2").value = datos.kmfinal2 || "";
+        document.getElementById("dietas").value = datos.dietas || "";
+        document.getElementById("notas").value = datos.notas || "";
+
+    } else {
+
+        document.getElementById("bus").value = "";
+        document.getElementById("entrada").value = "";
+        document.getElementById("salida").value = "";
+        document.getElementById("total").value = "";
+        document.getElementById("kminicio").value = "";
+        document.getElementById("kmfinal").value = "";
+        document.getElementById("bus2").value = "";
+document.getElementById("entrada2").value = "";
+document.getElementById("salida2").value = "";
+document.getElementById("kminicio2").value = "";
+document.getElementById("kmfinal2").value = "";
+        document.getElementById("dietas").value = "";
+        document.getElementById("notas").value = "";
+    }
+
+    document.getElementById("mensaje").innerText = "";
+}
+
+document.getElementById("dia").addEventListener("change", cargarDia);
+function mostrarDias() {
+
+    const lista = document.getElementById("listaDias");
+    const dias = [];
+
+    for (let i = 0; i < localStorage.length; i++) {
+
+        const clave = localStorage.key(i);
+
+        if (/^controlDiario_\d{4}-\d{2}-\d{2}$/.test(clave)) {
+    dias.push(clave.replace("controlDiario_", ""));
+}
+}
+    lista.innerHTML = "";
+
+    if (dias.length === 0) {
+        lista.innerHTML = "<p>No hay días guardados.</p>";
+        return;
+    }
+
+    dias.forEach(function(dia) {
+
+        const boton = document.createElement("button");
+        const datosDia = JSON.parse(localStorage.getItem("controlDiario_" + dia)) || {};
+const partes = dia.split("-");
+const fechaVisible = partes[2] + "/" + partes[1] + "/" + partes[0];
+boton.textContent = fechaVisible + " — BUS " + (datosDia.bus || "");
+
+        boton.onclick = function() {
+            document.getElementById("dia").value = dia;
+            cargarDia();
+        };
+
+        lista.appendChild(boton);
+    });
+}
+function nuevoDia() {
+    document.getElementById("dia").value = "";
+    document.getElementById("bus").value = "";
+    document.getElementById("entrada").value = "";
+    document.getElementById("salida").value = "";
+    document.getElementById("total").value = "";
+    document.getElementById("kminicio").value = "";
+    document.getElementById("kmfinal").value = "";
+
+    document.getElementById("bus2").value = "";
+    document.getElementById("entrada2").value = "";
+    document.getElementById("salida2").value = "";
+    document.getElementById("kminicio2").value = "";
+    document.getElementById("kmfinal2").value = "";
+
+    document.getElementById("dietas").value = "";
+    document.getElementById("notas").value = "";
+    document.getElementById("mensaje").innerText = "";
+    document.getElementById("listaDias").innerHTML = "";
+}
+function borrarDia() {
+
+    const dia = document.getElementById("dia").value;
+
+    if (!dia) {
+        alert("Selecciona primero un día.");
+        return;
+    }
+
+    const clave = "controlDiario_" + dia;
+
+    if (!localStorage.getItem(clave)) {
+        alert("No hay ningún registro guardado para ese día.");
+        return;
+    }
+
+    const confirmar = confirm(
+        "¿Seguro que quieres borrar el registro del " + dia + "?"
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    localStorage.removeItem(clave);
+
+    nuevoDia();
+    mostrarDias();
+
+    alert("Registro borrado.");
+}
+function copiaSeguridad() {
+    const copia = {};
+
+    for (let i = 0; i < localStorage.length; i++) {
+
+        const clave = localStorage.key(i);
+
+ if (/^controlDiario_\d{4}-\d{2}-\d{2}$/.test(clave)) {
+            copia[clave] = localStorage.getItem(clave);
+        }
+    }
+
+    const contenido = JSON.stringify(copia, null, 2);
+
+    if (navigator.clipboard) {
+
+        navigator.clipboard.writeText(contenido)
+        .then(function() {
+            alert("COPIA DE SEGURIDAD COPIADA");
+        })
+        .catch(function() {
+            copiarAlternativo(contenido);
+        });
+
+    } else {
+        copiarAlternativo(contenido);
+    }
+}
+
+function copiarAlternativo(texto) {
+
+    const area = document.createElement("textarea");
+    area.value = texto;
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand("copy");
+    document.body.removeChild(area);
+
+    alert("COPIA DE SEGURIDAD COPIADA");
+}
+</script>
+
+</body>
+</html>
